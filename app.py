@@ -5,7 +5,7 @@ from langchain_core.prompts import ChatPromptTemplate
 
 # Constants
 MODEL_NAME = 'deepseek-r1:1.5b' 
-SYSTEM_PROMPET = 'you are a helpful assistant'
+SYSTEM_PROMPET = 'You are a helpful assistant'
 
 
 # build a streamlit app
