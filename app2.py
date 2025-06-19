@@ -75,12 +75,16 @@ for msg in msgs.messages:
 
 if prompt_text := st.chat_input("type your message here......."):
     st.chat_message("human").write(prompt_text) 
-    with st.spinner("thinking....."):
-        response = chain_with_history.invoke(
+    with st.chat_message("ai"):
+        response_placeholder = st.empty()
+        full_response = ''
+        for token in chain_with_history.stream(
             {"input":prompt_text},
             {'configurable':{"session_id":"test"}}
-        )
-        st.chat_message("ai").write(response.content)
+        ):
+            full_response += token.content
+            response_placeholder.markdown(full_response)
+
 
 
 
