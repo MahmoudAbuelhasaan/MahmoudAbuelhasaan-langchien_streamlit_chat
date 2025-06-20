@@ -57,7 +57,7 @@ def get_conversations(session):
     return session.query(Conversation).order_by(Conversation.created_at.desc()).all()
 
 def get_messages(session,conversation_id):
-    return session.query(Message).filter_by(conversation_id=conversation_id).order_by(Message.created_at.desc()).all()
+    return session.query(Message).filter_by(conversation_id=conversation_id).order_by(Message.created_at.asc()).all()
 
 
 

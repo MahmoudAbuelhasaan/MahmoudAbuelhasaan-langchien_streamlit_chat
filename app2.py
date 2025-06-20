@@ -3,10 +3,11 @@ from langchain_ollama import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate,MessagesPlaceholder
 from langchain_community.chat_message_histories import StreamlitChatMessageHistory
 from langchain_core.runnables.history import RunnableWithMessageHistory
-
+import re
 
 # Constants
 MODEL_NAME = 'deepseek-r1:1.5b' 
+
 SYSTEM_PROMPET = 'You are a helpful assistant'
 
 
@@ -22,7 +23,6 @@ with st.sidebar:
 # initilize chat
 llm = ChatOllama(
     model=MODEL_NAME,
-    base_url="http://localhost:11500",
     temperature=temprature,
     num_predict=max_tokens
 
@@ -84,6 +84,7 @@ if prompt_text := st.chat_input("type your message here......."):
         ):
             full_response += token.content
             response_placeholder.markdown(full_response)
+            
 
 
 

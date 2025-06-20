@@ -7,6 +7,15 @@ from ai import get_chain_with_history
 # sidebar
 st.sidebar.title("Conversations")
 
+# needs rerun
+if "needs_rerun" not in st.session_state:
+    st.session_state.needs_rerun = False
+
+if "active_conversation_id" not in st.session_state:
+    st.session_state.active_conversation_id = None
+
+prev_conversation_id = st.session_state.active_conversation_id
+
 # proccess conversations in sidebar 
 session = get_session()
 conversations = get_conversations(session)
@@ -26,18 +35,37 @@ elif selected_conv in conv_titles:
     idx = conv_titles.index(selected_conv)
     st.session_state.active_conversation_id = conv_ids[idx]
 
+
+
 # load messages for active conversation
 if st.session_state.active_conversation_id is not None:
     conv_messages = get_messages(session,st.session_state.active_conversation_id)
     idx = conv_ids.index(st.session_state.active_conversation_id)
     conv_title = conv_titles[idx]
+    
 else:
     conv_messages = []
     conv_title = "New Conversation"
 
+
 # Chat UI 
 st.title(conv_title)
 msgs = StreamlitChatMessageHistory(key="chat_history")
+
+# load message on selected conversation change
+if st.session_state.active_conversation_id != prev_conversation_id:
+    msgs.clear()
+    for msg in conv_messages:
+        if msg.role == "user":
+            msgs.add_user_message(msg.content)
+        else:
+            msgs.add_ai_message(msg.content)
+    
+    if not conv_messages and st.session_state.active_conversation_id is None:
+        msgs.add_ai_message("how can i helpe you?")
+        st.session_state.needs_rerun = True
+
+
 
 # get chain with history 
 chain_with_history = get_chain_with_history(msgs)
@@ -73,6 +101,12 @@ if prompt_text := st.chat_input("type your message here......."):
 
     # update streamlit UI
     st.rerun()
+
+
+if st.session_state.needs_rerun:
+    st.session_state.needs_rerun = False
+    st.rerun()
+
 
 
 

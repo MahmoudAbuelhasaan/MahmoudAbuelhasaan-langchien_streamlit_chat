@@ -11,7 +11,7 @@ SYSTEM_PROMPET = 'You are a helpful assistant'
 # initilize chat
 llm = ChatOllama(
     model=MODEL_NAME,
-    base_url="http://localhost:11500" 
+    num_predict=500
     )
 
 
